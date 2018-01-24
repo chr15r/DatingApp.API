@@ -23,7 +23,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> GetValues()
         {
            var values = await _context.Values.ToListAsync();
-           return Ok(values);          
+           return Ok(values);           
         }
 
         // GET api/values/5
