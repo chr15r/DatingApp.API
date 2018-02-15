@@ -51,7 +51,9 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDTO userForLoginDTO)
         {
-            // throw new Exception("Go away!");
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var userFromRepo = await _repo.Login(userForLoginDTO.Username.ToLower(), userForLoginDTO.Password);
             if (userFromRepo == null)
