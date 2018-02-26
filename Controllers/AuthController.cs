@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using System;
+using AutoMapper;
 
 namespace DatingApp.API.Controllers
 {
@@ -17,8 +18,10 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper;
             _repo = repo;
             _config = config;
         }
@@ -52,7 +55,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> Login([FromBody] UserForLoginDTO userForLoginDTO)
         {
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var userFromRepo = await _repo.Login(userForLoginDTO.Username.ToLower(), userForLoginDTO.Password);
@@ -75,7 +78,10 @@ namespace DatingApp.API.Controllers
             };
             var token = tokenhandler.CreateToken(tokenDescriptor);
             var tokenString = tokenhandler.WriteToken(token);
-            return Ok(new { tokenString });
+
+            var user = _mapper.Map<UserForListDTO>(userFromRepo);
+
+            return Ok(new { tokenString, user });
 
         }
 
