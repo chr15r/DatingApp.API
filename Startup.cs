@@ -58,6 +58,7 @@ namespace DatingApp.API
                  // When getting users, users reference photo collection, which in turn reference back to a user - results in self-referencing loop
                  opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
              });
+             services.AddScoped<LogUserActivity>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
